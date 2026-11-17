@@ -1,0 +1,147 @@
+@import "tailwindcss";
+
+@import "@fontsource/barlow/400.css";
+@import "@fontsource/barlow/500.css";
+@import "@fontsource/barlow/600.css";
+@import "@fontsource/barlow-semi-condensed/500.css";
+@import "@fontsource/barlow-semi-condensed/600.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+/*
+  Tokens. Anthracite ground (RAL 7016 family), aluminium text,
+  one pilot-lamp amber for state and focus, steel blue for data flow.
+*/
+@theme {
+  --color-ground: #15171a;
+  --color-surface: #1b1e22;
+  --color-raised: #23272c;
+  --color-line: #2c3137;
+  --color-line-strong: #3e454d;
+  --color-fg: #eceef0;
+  --color-fg-muted: #a7adb4;
+  --color-fg-subtle: #858c94;
+  --color-signal: #f2a93b;
+  --color-signal-dim: #6b4a1c;
+  --color-flow: #8fb3d1;
+  --color-flow-dim: #2f4152;
+
+  --font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Barlow Semi Condensed", "Barlow", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --text-display: clamp(3rem, 2rem + 5.2vw, 6rem);
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.025em;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --radius-card: 14px;
+}
+
+@layer base {
+  html {
+    background: var(--color-ground);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-size: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: 5.5rem;
+    color-scheme: dark;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    font-feature-settings: "kern", "liga";
+  }
+
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+
+  p, li {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--color-signal);
+    color: var(--color-ground);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-signal);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  a {
+    text-underline-offset: 0.22em;
+    text-decoration-thickness: 1px;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line-strong) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line-strong);
+    border-radius: 10px;
+    border: 3px solid var(--color-ground);
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+@layer utilities {
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .measure {
+    max-width: 68ch;
+  }
+}
+
+/* Diagram flow animation: dashes travel along an edge on hover/focus of the owning card. */
+@keyframes flow-dash {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+.diagram-edge-flow {
+  stroke-dasharray: 4 8;
+  opacity: 0;
+  transition: opacity 300ms var(--ease-out-expo);
+}
+
+.group:hover .diagram-edge-flow,
+.group:focus-within .diagram-edge-flow,
+.diagram-live .diagram-edge-flow {
+  opacity: 1;
+  animation: flow-dash 900ms linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .group:hover .diagram-edge-flow,
+  .group:focus-within .diagram-edge-flow,
+  .diagram-live .diagram-edge-flow {
+    animation: none;
+    opacity: 0;
+  }
+}
