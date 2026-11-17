@@ -26,7 +26,7 @@ Every text is written as `{ fr: "...", en: "..." }`.
 
 **Add a project**: append an object to `projects` in `src/content/projects.ts`. Set `featured: true` to show it as a large card with its diagram. A case-study page is generated at `/fr/projects/<slug>/` and `/en/projects/<slug>/`.
 
-**Diagrams** are plain data: nodes placed on a grid (`col`, `row`, optional `rowSpan`) and edges between them (`kind: "return"` draws a feedback loop underneath). `tone: "focus"` marks the part the project is about; `tone: "muted"` draws a dashed box for simulated parts.
+**Diagrams** are plain data: nodes placed on a grid (`col`, `row`, optional `rowSpan`) and edges between them (`kind: "return"` draws a feedback loop underneath; `kind: "planned"` draws a dashed edge with no data packets, for a path that exists in code but has not been run). `tone: "focus"` marks the part the project is about; `tone: "muted"` draws a dashed box for simulated, excluded or not-yet-run parts.
 
 **GitHub link**: once you have public repositories, set `github` in `src/content/site.ts` to `"https://github.com/mahmoudkchouk"`; the contact section shows it automatically.
 

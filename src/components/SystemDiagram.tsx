@@ -137,7 +137,7 @@ function Svg({
       const a = rects.get(e.from)!;
       const b = rects.get(e.to)!;
       const from = diagram.nodes.find((n) => n.id === e.from)!;
-      return { key: `${e.from}-${e.to}-${i}`, d: edgePath(a, b, vertical), stage: from.col };
+      return { key: `${e.from}-${e.to}-${i}`, d: edgePath(a, b, vertical), stage: from.col, planned: e.kind === "planned" };
     });
   const returns = diagram.edges
     .filter((e) => e.kind === "return")
@@ -190,7 +190,7 @@ function Svg({
 
       <g fill="none" stroke="#2c3644" strokeWidth={1.25}>
         {flows.map((f) => (
-          <path key={f.key} d={f.d} markerEnd={`url(#${uid}-arrow)`} />
+          <path key={f.key} d={f.d} strokeDasharray={f.planned ? "3 5" : undefined} markerEnd={`url(#${uid}-arrow)`} />
         ))}
         {returns.map((r) => (
           <path key={r.key} d={r.d} strokeDasharray="3 5" markerEnd={`url(#${uid}-arrow)`} />
@@ -209,7 +209,7 @@ function Svg({
 
       {animated && (
         <g className="packets">
-          {flows.map((f, i) => (
+          {flows.filter((f) => !f.planned).map((f, i) => (
             <circle key={`p-${f.key}`} r={2.6} fill="var(--color-live)">
               <animateMotion
                 dur="2.6s"

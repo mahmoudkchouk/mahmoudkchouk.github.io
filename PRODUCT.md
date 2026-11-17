@@ -31,7 +31,7 @@ Visitors arrive from the CV, LinkedIn or GitHub profile. The CV PDF (public/cv/)
 ## Capabilities and Constraints
 
 - Bilingual FR/EN.
-- No public GitHub repositories exist yet (account: mahmoudkchouk). Project pages must not link to repos that do not exist.
+- GitHub account: mahmoudkchouk. One public repository so far: esp32c6-rfid-iot (its ESP-IDF firmware and Python subscriber are still to be added). Project pages must only link to repositories that exist; FX Agents has no public code and must not link to any.
 - Do not publish the phone number. Professional email: mahmoud.kchouk@utt.fr. LinkedIn: linkedin.com/in/mahmoud-kchouk-b07383226. Location: Reims, France.
 - No photo.
 
@@ -42,6 +42,7 @@ Visitors arrive from the CV, LinkedIn or GitHub profile. The CV PDF (public/cv/)
 ## Evidence on Hand
 
 - CV_Mahmoud_Kchouk.pdf: experience at Cascadya (Sept 2025 – Aug 2026, 6-month internship then part-time fixed-term contract), SOTULUB Tunisia internship (Jan–Feb 2022), education (UTT 2024–2027, CPGE TSI Lycée du Hainaut 2022–2024), six projects (2-axis gimbal ESP32-C6, NALEN energy monitoring prototype, ROS Noetic TurtleBot3, ABB IRB120 RobotStudio, dsPIC30F6014 DSP, Raspberry Pi kernel modules), skills, certifications, languages, associations.
+- FX Agents (personal project, October 2026): facts come from the project's code and the owner's own statements. Designed and built with the help of AI coding agents. Only the test suite and backtests were run; the OANDA practice runner and the local dashboard were not, so never present them as tested. No P&L figures.
 - Absent: screenshots, metrics, repository links, client names beyond Cascadya. Never fabricate results, metrics or outcomes. NALEN was validated on simulated data only.
 
 ## Product Principles

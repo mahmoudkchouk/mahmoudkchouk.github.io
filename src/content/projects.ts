@@ -14,8 +14,11 @@ export type DiagramNode = {
 export type DiagramEdge = {
   from: string;
   to: string;
-  /** "return" draws a feedback path underneath the diagram. */
-  kind?: "flow" | "return";
+  /**
+   * "return" draws a feedback path underneath the diagram.
+   * "planned" draws a dashed edge with no data packets: a path that exists but has not been run.
+   */
+  kind?: "flow" | "return" | "planned";
   label?: L;
 };
 
@@ -575,6 +578,117 @@ export const projects: Project[] = [
       ],
     },
     diagrams: [],
+  },
+  {
+    slug: "fx-agents",
+    title: t("FX Agents", "FX Agents"),
+    summary: t(
+      "Système multi-agents de recherche sur EUR/USD : des agents à règles proposent, un moteur de risque déterministe décide, le tout testé en walk-forward sans information du futur.",
+      "A multi-agent research system for EUR/USD: rule-based agents propose, a deterministic risk engine decides, all tested walk-forward with no look-ahead.",
+    ),
+    period: t("octobre 2026", "October 2026"),
+    context: t("Projet personnel", "Personal project"),
+    domain: t("Systèmes multi-agents, données de marché", "Multi-agent systems, market data"),
+    stack: ["Python", "pandas", "NumPy", "pytest", "OANDA v20 REST", "Dukascopy"],
+    objective: t(
+      "Apprendre à concevoir un système multi-agents et à piloter des agents de codage IA, sur un problème où l'erreur est facile : décider d'un trade EUR/USD sans jamais utiliser d'information du futur, en laissant le dernier mot à un contrôle de risque écrit en code simple.",
+      "Learn to design a multi-agent system and to direct AI coding agents, on a problem where mistakes come easily: deciding an EUR/USD trade without ever using information from the future, with the final say left to a risk check written in plain code.",
+    ),
+    work: {
+      fr: [
+        "Conçu et développé avec l'aide d'agents de codage IA. J'ai défini l'architecture, les spécifications et les protocoles de test anti-fuite, écrit une partie importante du code, relu les audits et pris les décisions GO/NO-GO.",
+        "Comité de cinq agents à règles (tendance multi-unités de temps, ICT/SMC simplifié, régime de marché, fondamental, annonces) : débat haussier/baissier, puis un contradicteur cherche les objections avant toute proposition avec stop et objectif.",
+        "Moteur de risque déterministe qui a toujours le dernier mot : 0,25 % de risque par trade, limites de perte journalière et de drawdown, spread maximal, deux entrées par jour, blocage autour des annonces importantes. Un LLM peut, en option, seulement confirmer ou rejeter une proposition.",
+        "Données : historique EUR/USD Dukascopy décodé depuis son format binaire, cours Bid et Ask appariés heure par heure (26 481 bougies H1, de janvier 2018 à mars 2022), empreintes SHA-256 et rapport qualité.",
+        "Recherche : six stratégies et un routeur par régime de marché, plus une régression logistique écrite en NumPy, comparés en walk-forward sur trois fenêtres de six mois dans un simulateur Bid/Ask (spread observé, slippage, gaps).",
+        "Résultat : le modèle appris ne bat pas une référence constante sur les périodes de test. La chaîne fonctionne, mais aucun avantage n'est démontré.",
+        "Vérifié par une suite de 334 tests pytest et par des backtests. L'exécution sur compte démo OANDA, seul mode autorisé par le code, n'a pas encore été lancée.",
+      ],
+      en: [
+        "Designed and built with the help of AI coding agents. I defined the architecture, specifications and leak-proof test protocols, wrote a significant part of the code, reviewed the audits and made the GO/NO-GO decisions.",
+        "A committee of five rule-based agents (multi-timeframe trend, simplified ICT/SMC, market regime, fundamentals, news): a bull/bear debate, then a challenger looks for objections before any proposal with a stop and a target.",
+        "A deterministic risk engine that always has the final say: 0.25% risk per trade, daily loss and drawdown limits, maximum spread, two entries a day, a block around major announcements. An optional LLM can only confirm or reject a proposal.",
+        "Data: Dukascopy EUR/USD history decoded from its binary format, Bid and Ask quotes paired hour by hour (26,481 H1 candles, January 2018 to March 2022), SHA-256 fingerprints and a quality report.",
+        "Research: six strategies and a market-regime router, plus a logistic regression written in NumPy, compared walk-forward over three six-month windows in a Bid/Ask simulator (observed spread, slippage, gaps).",
+        "Result: the learned model does not beat a constant baseline on the test periods. The pipeline works, but no edge is demonstrated.",
+        "Checked by a suite of 334 pytest tests and by backtests. Execution on an OANDA practice account, the only mode the code allows, has not been run yet.",
+      ],
+    },
+    challenges: {
+      fr: [
+        "Ne jamais utiliser d'information du futur : indicateurs H4 et D1 pris à la clôture de leur bougie, normalisation ajustée sur l'entraînement seul, labels purgés aux frontières des fenêtres.",
+        "Garder une période de validation finale intacte : les prix de 2024 et après sont écartés d'après leur date, avant même la lecture de leur valeur.",
+        "Simuler l'exécution sans s'avantager : achat à l'Ask, vente au Bid, gaps à travers le stop, stop retenu en premier quand une bougie touche les deux niveaux.",
+        "Télécharger l'historique sans se faire bloquer : requêtes espacées, refus HTTP 429 respectés, cache reprenable. Les données de 2022 à 2025 restent incomplètes.",
+        "Rendre l'envoi d'ordres sûr : un ordre n'est jamais renvoyé automatiquement, et une issue incertaine bloque les entrées suivantes jusqu'à vérification.",
+        "Encadrer des agents de codage IA : missions écrites, périmètres de fichiers séparés, audits indépendants. Ce que j'en retiens : ils ne sont fiables qu'encadrés par des spécifications précises, des tests et des audits.",
+      ],
+      en: [
+        "Never using information from the future: H4 and D1 indicators taken at their candle's close, scaling fitted on training data only, labels purged at window boundaries.",
+        "Keeping a final validation period untouched: prices from 2024 onwards are dropped by their date, before their values are even read.",
+        "Simulating execution without flattering it: buy at the Ask, sell at the Bid, gaps through the stop, stop assumed first when a candle touches both levels.",
+        "Downloading the history without getting blocked: spaced requests, HTTP 429 refusals honoured, a resumable cache. Data for 2022 to 2025 is still incomplete.",
+        "Making order submission safe: an order is never resent automatically, and an uncertain outcome blocks further entries until it is checked.",
+        "Directing AI coding agents: written briefs, separate file scopes, independent audits. My takeaway: they are only reliable when framed by precise specifications, tests and audits.",
+      ],
+    },
+    diagrams: [
+      {
+        lanes: [
+          { col: 0, label: t("Marché", "Market") },
+          { col: 1, label: t("Analyse", "Analysis") },
+          { col: 2, label: t("Propositions", "Proposals") },
+          { col: 3, label: t("Contrôle", "Control") },
+          { col: 4, label: t("Exécution", "Execution") },
+        ],
+        cols: 5,
+        rows: 3,
+        nodes: [
+          { id: "data", col: 0, row: 0, rowSpan: 3, label: t("Dukascopy", "Dukascopy"), sub: t("Bid/Ask H1", "Bid/Ask H1") },
+          { id: "feat", col: 1, row: 0, rowSpan: 3, label: t("Indicateurs", "Indicators"), sub: t("H1, H4, D1 causaux", "causal H1, H4, D1") },
+          { id: "committee", col: 2, row: 0, label: t("Comité d'agents", "Agent committee"), sub: t("5 analystes", "5 analysts") },
+          { id: "strategies", col: 2, row: 1, label: t("6 stratégies", "6 strategies"), sub: t("selon le régime", "by market regime") },
+          { id: "model", col: 2, row: 2, label: t("Modèle appris", "Learned model"), sub: t("classifieur NumPy", "NumPy classifier") },
+          { id: "risk", col: 3, row: 0, rowSpan: 3, label: t("Moteur de risque", "Risk engine"), sub: t("code, dernier mot", "plain code, final say"), tone: "focus" },
+          { id: "sim", col: 4, row: 0, rowSpan: 2, label: t("Simulation", "Simulation"), sub: t("backtests, walk-forward", "backtests, walk-forward") },
+          { id: "oanda", col: 4, row: 2, label: t("OANDA démo", "OANDA practice"), sub: t("pas encore lancé", "not run yet"), tone: "muted" },
+        ],
+        edges: [
+          { from: "data", to: "feat" },
+          { from: "feat", to: "committee" },
+          { from: "feat", to: "strategies" },
+          { from: "feat", to: "model" },
+          { from: "committee", to: "risk" },
+          { from: "strategies", to: "risk" },
+          { from: "model", to: "risk" },
+          { from: "risk", to: "sim" },
+          { from: "risk", to: "oanda", kind: "planned" },
+        ],
+        caption: t(
+          "Toute proposition passe par le même moteur de risque. En pointillés : l'exécution sur compte démo OANDA, présente dans le code mais pas encore lancée.",
+          "Every proposal goes through the same risk engine. Dashed: execution on an OANDA practice account, present in the code but not run yet.",
+        ),
+      },
+      {
+        cols: 4,
+        rows: 1,
+        nodes: [
+          { id: "train", col: 0, row: 0, label: t("Entraînement", "Training"), sub: t("fenêtre croissante", "expanding window") },
+          { id: "val", col: 1, row: 0, label: t("Validation", "Validation"), sub: t("6 mois, réglages", "6 months, tuning") },
+          { id: "test", col: 2, row: 0, label: t("Test", "Test"), sub: t("6 mois suivants", "next 6 months") },
+          { id: "held", col: 3, row: 0, label: t("2024 et après", "2024 onwards"), sub: t("exclu des calculs", "excluded from all runs"), tone: "muted" },
+        ],
+        edges: [
+          { from: "train", to: "val" },
+          { from: "val", to: "test" },
+          { from: "test", to: "train", kind: "return", label: t("fenêtre suivante, 3 au total", "next window, 3 in total") },
+        ],
+        caption: t(
+          "Walk-forward : entraînement sur tout le passé, réglage sur les 6 mois suivants, test sur les 6 d'après, trois fois. La période à partir de 2024 reste réservée.",
+          "Walk-forward: train on all past data, tune on the next 6 months, test on the 6 after that, three times over. Everything from 2024 onwards stays held out.",
+        ),
+      },
+    ],
   },
 ];
 
