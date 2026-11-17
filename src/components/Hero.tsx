@@ -25,8 +25,8 @@ export function Hero({ locale }: { locale: Locale }) {
 
   return (
     <section aria-labelledby="hero-title" className="relative overflow-hidden">
-      <div className="mx-auto grid max-w-[1320px] items-center gap-14 px-5 pb-20 pt-32 sm:px-8 sm:pt-36 lg:min-h-[min(100svh,880px)] lg:grid-cols-[minmax(0,4.3fr)_minmax(0,7.7fr)] lg:gap-12 lg:pb-14 lg:pt-28 xl:gap-20">
-        <div className="max-w-[34rem]">
+      <div className="mx-auto grid max-w-[1320px] items-center gap-14 px-5 pb-20 pt-32 sm:px-8 sm:pt-36 lg:min-h-[min(100svh,880px)] lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12 lg:pb-14 lg:pt-28 xl:gap-20">
+        <div className="max-w-[36rem]">
           <motion.h1 id="hero-title" className="text-hero font-medium text-fg" {...rise(0.05)}>
             {t.title}
           </motion.h1>
