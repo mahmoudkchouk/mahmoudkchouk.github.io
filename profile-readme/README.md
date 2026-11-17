@@ -4,7 +4,7 @@ Final-year engineering student in automation and industrial computing at [Univer
 
 I work across the whole chain of an industrial system: embedded C and sensors, Modbus and LoRaWAN gateways, cloud infrastructure, monitoring and CI/CD. I spent a year at Cascadya building and running an edge-to-cloud IoT platform on Scaleway (Terraform, Ansible, Docker, ThingsBoard, InfluxDB, Grafana, GitHub Actions).
 
-**Looking for a 6-month end-of-studies internship from January 2027**, where IoT, DevOps, robotics and embedded systems meet. Open to anywhere in France.
+**Looking for a 6-month end-of-studies internship from January or February 2027**, where IoT, DevOps, robotics and embedded systems meet. Open to anywhere in France.
 
 | Domain | Tools |
 | --- | --- |
@@ -18,4 +18,4 @@ I work across the whole chain of an industrial system: embedded C and sensors, M
 
 ---
 
-**Français** : élève-ingénieur en automatique et informatique industrielle à l'UTT, je recherche un stage de fin d'études de 6 mois à partir de janvier 2027. [Voir mon portfolio](https://mahmoudkchouk.github.io/fr/).
+**Français** : élève-ingénieur en automatique et informatique industrielle à l'UTT, je recherche un stage de fin d'études de 6 mois à partir de janvier ou février 2027. [Voir mon portfolio](https://mahmoudkchouk.github.io/fr/).

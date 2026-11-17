@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
-import { ArrowUpRight, Download } from "lucide-react";
-import { ui, asset, type Locale } from "@/lib/i18n";
-import { profile } from "@/content/site";
+import { ArrowUpRight } from "lucide-react";
+import { ui, type Locale } from "@/lib/i18n";
 import { heroDiagram, projects } from "@/content/projects";
 import { SystemDiagram } from "./SystemDiagram";
 
@@ -42,16 +41,14 @@ export function Hero({ locale }: { locale: Locale }) {
               {t.ctaProjects}
             </a>
             <a
-              href={asset(profile.cv)}
-              download
-              className="inline-flex min-h-12 items-center gap-2 rounded-full border border-line-strong px-6 font-medium text-fg transition-colors duration-200 hover:border-fg-subtle hover:bg-surface"
+              href={`/${locale}/#contact`}
+              className="inline-flex min-h-12 items-center rounded-full border border-line-strong px-6 font-medium text-fg transition-colors duration-200 hover:border-fg-subtle hover:bg-surface"
             >
-              <Download size={17} strokeWidth={1.75} aria-hidden />
-              {t.ctaCv}
+              {t.ctaContact}
             </a>
           </motion.div>
-          <motion.p className="mt-10 flex items-center gap-3 text-[0.9375rem] text-fg-muted" {...rise(0.35)}>
-            <span className="relative flex h-2 w-2" aria-hidden>
+          <motion.p className="mt-10 flex max-w-[30rem] items-start gap-3 text-[0.9375rem] leading-relaxed text-fg-muted" {...rise(0.35)}>
+            <span className="relative mt-[0.6em] flex h-2 w-2 shrink-0" aria-hidden>
               <span className="absolute inset-0 rounded-full bg-live" />
               {!reduce && <span className="absolute inset-0 animate-ping rounded-full bg-live opacity-40 [animation-duration:2.4s]" />}
             </span>

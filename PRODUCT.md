@@ -12,13 +12,13 @@ Next.js (App Router) + TypeScript, Tailwind CSS, Motion (Framer Motion), Lucide 
 
 ## Users
 
-- Engineering recruiters screening candidates for a 6-month end-of-studies internship (stage de fin d'études) starting January 2027, France-wide mobility. They skim in under a minute, often from a LinkedIn or CV link, on laptop or phone.
+- Engineering recruiters screening candidates for a 6-month end-of-studies internship (stage de fin d'études) starting January or February 2027, France-wide mobility. They skim in under a minute, often from a LinkedIn or CV link, on laptop or phone.
 - Technical managers in IoT, DevOps/cloud, embedded systems and robotics who read deeper to judge whether the candidate can design, implement, integrate and maintain real systems.
 - Both French- and English-speaking readers.
 
 ## Product Purpose
 
-Personal portfolio of Mahmoud Kchouk, final-year engineering student at Université de Technologie de Troyes (UTT), Automatique & Informatique Industrielle. Success: a recruiter understands within seconds who he is, what he builds and that he is available from January 2027, then contacts him or downloads the CV.
+Personal portfolio of Mahmoud Kchouk, final-year engineering student at Université de Technologie de Troyes (UTT), Automatique & Informatique Industrielle. Success: a recruiter understands within seconds who he is, what he builds and that he is available from January or February 2027, then contacts him. No CV download on the site (owner's decision).
 
 ## Positioning
 

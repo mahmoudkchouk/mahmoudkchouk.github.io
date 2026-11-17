@@ -21,7 +21,6 @@ Everything you would edit lives in `src/content/`:
 | `src/content/site.ts` | Profile, contact links, experience, skills, education, certifications |
 | `src/content/projects.ts` | Projects, case studies and their architecture diagrams |
 | `src/lib/i18n.ts` | Interface text in French and English |
-| `public/cv/CV_Mahmoud_Kchouk.pdf` | The downloadable CV |
 
 Every text is written as `{ fr: "...", en: "..." }`.
 
