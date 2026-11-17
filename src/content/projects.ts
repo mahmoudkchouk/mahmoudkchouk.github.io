@@ -169,6 +169,86 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: "esp32c6-rfid-iot",
+    featured: true,
+    showcase: "diagram",
+    title: t("Lecteur RFID UHF connecté sur ESP32-C6", "Connected UHF RFID reader on ESP32-C6"),
+    summary: t(
+      "Chaîne d'acquisition IoT complète : lecture de tags RFID UHF en UART, publication MQTT en Wi-Fi depuis un ESP32-C6, stockage MariaDB sur Raspberry Pi.",
+      "A complete IoT acquisition chain: UHF RFID tags read over UART, published over Wi-Fi with MQTT from an ESP32-C6, stored in MariaDB on a Raspberry Pi.",
+    ),
+    period: t("octobre 2026", "October 2026"),
+    context: t("Projet académique UTT (EB03)", "UTT academic project (EB03)"),
+    domain: t("Systèmes embarqués, IoT", "Embedded systems, IoT"),
+    stack: ["ESP32-C6", "C", "ESP-IDF", "UART", "Wi-Fi", "MQTT", "Mosquitto", "Python", "paho-mqtt", "PyMySQL", "MariaDB", "Raspberry Pi"],
+    objective: t(
+      "Lire automatiquement les identifiants de tags RFID UHF, les transmettre par Wi-Fi depuis un microcontrôleur et les enregistrer dans une base de données, sans intervention.",
+      "Automatically read UHF RFID tag identifiers, send them over Wi-Fi from a microcontroller and store them in a database, with no manual step.",
+    ),
+    work: {
+      fr: [
+        "Firmware en C sous ESP-IDF : UART1 à 115200 bauds 8N1, GPIO6 en TX vers le lecteur et GPIO7 en RX depuis le lecteur.",
+        "Envoi de la commande d'activation du lecteur (trame 53 06 01 02 4F 34), réception et reconstitution des trames série, vérification des données et extraction des identifiants.",
+        "Connexion Wi-Fi et publication des identifiants en MQTT sur le topic eb03/rfid/tag, en QoS 1.",
+        "Broker Mosquitto sur Raspberry Pi (port 1883) et subscriber Python (paho-mqtt, PyMySQL) qui enregistre chaque tag dans MariaDB, table tags_rfid horodatée.",
+        "Première version en HTTP POST vers un script PHP, puis migration vers une architecture MQTT.",
+      ],
+      en: [
+        "C firmware on ESP-IDF: UART1 at 115200 baud 8N1, GPIO6 as TX to the reader and GPIO7 as RX from the reader.",
+        "Sends the reader's activation command (frame 53 06 01 02 4F 34), receives and reassembles serial frames, checks the data and extracts tag identifiers.",
+        "Wi-Fi connection and MQTT publication of identifiers on topic eb03/rfid/tag at QoS 1.",
+        "Mosquitto broker on a Raspberry Pi (port 1883) and a Python subscriber (paho-mqtt, PyMySQL) that stores each tag in MariaDB, in a timestamped tags_rfid table.",
+        "First version used HTTP POST to a PHP script, then migrated to an MQTT architecture.",
+      ],
+    },
+    challenges: {
+      fr: [
+        "Un lecteur RFID muet au départ : vérification des GPIO, du croisement TX/RX, du débit et des commandes envoyées.",
+        "Décoder le protocole du lecteur octet par octet, gérer les trames reçues en plusieurs fragments et contrôler leur intégrité.",
+        "Mise en route ESP-IDF : flash USB, ports série et écart entre la taille de flash configurée et celle détectée.",
+        "Migrer de HTTP vers MQTT et valider publication et réception : acquittements PUBACK observés.",
+        "Valider chaque maillon un par un, de la lecture RFID jusqu'à l'enregistrement en base.",
+      ],
+      en: [
+        "A silent RFID reader at first: checked GPIOs, TX/RX crossover, baud rate and the commands being sent.",
+        "Decoding the reader's protocol byte by byte, handling frames that arrive in several fragments and checking their integrity.",
+        "Getting ESP-IDF running: USB flashing, serial ports and a mismatch between configured and detected flash size.",
+        "Moving from HTTP to MQTT and validating publish and receive: PUBACK acknowledgements observed.",
+        "Validating every link one by one, from RFID read to database insert.",
+      ],
+    },
+    diagrams: [
+      {
+        lanes: [
+          { col: 0, label: t("Terrain", "Field") },
+          { col: 2, label: t("Microcontrôleur", "Microcontroller") },
+          { col: 3, label: t("Raspberry Pi", "Raspberry Pi") },
+        ],
+        cols: 6,
+        rows: 1,
+        nodes: [
+          { id: "tag", col: 0, row: 0, label: t("Tag RFID UHF", "UHF RFID tag"), tone: "muted" },
+          { id: "reader", col: 1, row: 0, label: t("Lecteur RFID", "RFID reader"), sub: t("antenne UHF", "UHF antenna") },
+          { id: "esp", col: 2, row: 0, label: t("ESP32-C6", "ESP32-C6"), sub: t("UART in, Wi-Fi out", "UART in, Wi-Fi out"), tone: "focus" },
+          { id: "broker", col: 3, row: 0, label: t("Mosquitto", "Mosquitto"), sub: t("MQTT, QoS 1", "MQTT, QoS 1") },
+          { id: "sub", col: 4, row: 0, label: t("Subscriber", "Subscriber"), sub: t("Python, paho-mqtt", "Python, paho-mqtt") },
+          { id: "db", col: 5, row: 0, label: t("MariaDB", "MariaDB"), sub: t("table tags_rfid", "tags_rfid table") },
+        ],
+        edges: [
+          { from: "tag", to: "reader" },
+          { from: "reader", to: "esp" },
+          { from: "esp", to: "broker" },
+          { from: "broker", to: "sub" },
+          { from: "sub", to: "db" },
+        ],
+        caption: t(
+          "Le lecteur parle en UART à l'ESP32-C6, qui publie en Wi-Fi/MQTT vers le broker du Raspberry Pi ; le subscriber Python écrit dans MariaDB.",
+          "The reader talks UART to the ESP32-C6, which publishes over Wi-Fi/MQTT to the Raspberry Pi broker; the Python subscriber writes to MariaDB.",
+        ),
+      },
+    ],
+  },
+  {
     slug: "nalen",
     featured: true,
     showcase: "diagram",

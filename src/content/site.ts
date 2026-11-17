@@ -132,17 +132,17 @@ export const capabilities: Capability[] = [
   {
     name: { fr: "Systèmes embarqués", en: "Embedded systems" },
     tools: { fr: "C, temps réel, traitement du signal, Linux embarqué", en: "C, real time, signal processing, embedded Linux" },
-    proof: ["traitement-signal-dspic", "linux-embarque-raspberry-pi"],
+    proof: ["esp32c6-rfid-iot", "traitement-signal-dspic", "linux-embarque-raspberry-pi"],
   },
   {
     name: { fr: "ESP32 et microcontrôleurs", en: "ESP32 and microcontrollers" },
-    tools: { fr: "ESP32-C6, dsPIC30F6014, STM32, centrale inertielle, PID", en: "ESP32-C6, dsPIC30F6014, STM32, IMU, PID" },
-    proof: ["gimbal-2-axes-esp32", "traitement-signal-dspic"],
+    tools: { fr: "ESP32-C6 (ESP-IDF), UART, GPIO, dsPIC30F6014, STM32, centrale inertielle, PID", en: "ESP32-C6 (ESP-IDF), UART, GPIO, dsPIC30F6014, STM32, IMU, PID" },
+    proof: ["esp32c6-rfid-iot", "gimbal-2-axes-esp32", "traitement-signal-dspic"],
   },
   {
     name: { fr: "Architecture IoT", en: "IoT architecture" },
     tools: { fr: "Modbus TCP, LoRaWAN, MQTT, passerelles edge, ThingsBoard", en: "Modbus TCP, LoRaWAN, MQTT, edge gateways, ThingsBoard" },
-    proof: ["plateforme-iot-edge-cloud", "nalen"],
+    proof: ["plateforme-iot-edge-cloud", "esp32c6-rfid-iot", "nalen"],
   },
   {
     name: { fr: "Infrastructure cloud", en: "Cloud infrastructure" },

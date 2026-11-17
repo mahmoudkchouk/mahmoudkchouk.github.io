@@ -71,6 +71,7 @@ function shortTitle(p: Project, locale: Locale) {
   const short: Record<string, { fr: string; en: string }> = {
     "plateforme-iot-edge-cloud": { fr: "Cascadya", en: "Cascadya" },
     nalen: { fr: "NALEN", en: "NALEN" },
+    "esp32c6-rfid-iot": { fr: "RFID ESP32-C6", en: "RFID ESP32-C6" },
     "gimbal-2-axes-esp32": { fr: "Gimbal", en: "Gimbal" },
     "robotique-mobile-ros": { fr: "ROS", en: "ROS" },
     "traitement-signal-dspic": { fr: "dsPIC", en: "dsPIC" },
