@@ -1,54 +1,50 @@
 @import "tailwindcss";
 
-@import "@fontsource/barlow/400.css";
-@import "@fontsource/barlow/500.css";
-@import "@fontsource/barlow/600.css";
-@import "@fontsource/barlow-semi-condensed/500.css";
-@import "@fontsource/barlow-semi-condensed/600.css";
-@import "@fontsource/ibm-plex-mono/400.css";
-@import "@fontsource/ibm-plex-mono/500.css";
+@import "@fontsource/instrument-sans/400.css";
+@import "@fontsource/instrument-sans/500.css";
+@import "@fontsource/instrument-sans/600.css";
 
 /*
-  Tokens. Anthracite ground (RAL 7016 family), aluminium text,
-  one pilot-lamp amber for state and focus, steel blue for data flow.
+  Direction A, "Système en lumière".
+  Ink-blue ground, cool silver text, one sea-glass accent that only ever means
+  "live": data in motion, availability, keyboard focus.
 */
 @theme {
-  --color-ground: #15171a;
-  --color-surface: #1b1e22;
-  --color-raised: #23272c;
-  --color-line: #2c3137;
-  --color-line-strong: #3e454d;
-  --color-fg: #eceef0;
-  --color-fg-muted: #a7adb4;
-  --color-fg-subtle: #858c94;
-  --color-signal: #f2a93b;
-  --color-signal-dim: #6b4a1c;
-  --color-flow: #8fb3d1;
-  --color-flow-dim: #2f4152;
+  --color-ink: #0d1117;
+  --color-ink-2: #11161e;
+  --color-surface: #151b24;
+  --color-raised: #1b232e;
+  --color-line: #222b37;
+  --color-line-strong: #313c4a;
+  --color-fg: #e9edf2;
+  --color-fg-muted: #a0a9b6;
+  --color-fg-subtle: #7d8796;
+  --color-live: #7fd1c4;
+  --color-live-deep: #2c5952;
 
-  --font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Barlow Semi Condensed", "Barlow", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
 
-  --text-display: clamp(3rem, 2rem + 5.2vw, 6rem);
-  --text-display--line-height: 0.98;
-  --text-display--letter-spacing: -0.025em;
+  --text-hero: clamp(2.5rem, 1.6rem + 2.6vw, 3.9rem);
+  --text-hero--line-height: 1.04;
+  --text-hero--letter-spacing: -0.032em;
+
+  --text-title: clamp(2.25rem, 1.6rem + 2.1vw, 3.5rem);
+  --text-title--line-height: 1.04;
+  --text-title--letter-spacing: -0.028em;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-
-  --radius-card: 14px;
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 @layer base {
   html {
-    background: var(--color-ground);
+    background: var(--color-ink);
     color: var(--color-fg);
     font-family: var(--font-sans);
-    font-size: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    scroll-padding-top: 5.5rem;
+    scroll-padding-top: 6rem;
     color-scheme: dark;
   }
 
@@ -61,30 +57,30 @@
   body {
     font-size: 1.0625rem;
     line-height: 1.6;
-    font-feature-settings: "kern", "liga";
+    font-feature-settings: "kern", "liga", "ss01";
   }
 
   h1, h2, h3 {
     text-wrap: balance;
   }
 
-  p, li {
+  p, li, dd {
     text-wrap: pretty;
   }
 
   ::selection {
-    background: var(--color-signal);
-    color: var(--color-ground);
+    background: rgba(127, 209, 196, 0.28);
+    color: var(--color-fg);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-signal);
+    outline: 2px solid var(--color-live);
     outline-offset: 3px;
-    border-radius: 4px;
+    border-radius: 6px;
   }
 
   a {
-    text-underline-offset: 0.22em;
+    text-underline-offset: 0.24em;
     text-decoration-thickness: 1px;
   }
 
@@ -93,17 +89,8 @@
     scrollbar-color: var(--color-line-strong) transparent;
   }
 
-  ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: var(--color-line-strong);
-    border-radius: 10px;
-    border: 3px solid var(--color-ground);
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
+  input[type="range"] {
+    accent-color: var(--color-live);
   }
 }
 
@@ -112,36 +99,20 @@
     font-variant-numeric: tabular-nums;
   }
 
-  .measure {
-    max-width: 68ch;
+  /* The lit panel every showcase visual sits on. */
+  .plate {
+    background:
+      radial-gradient(110% 70% at 72% -10%, rgba(127, 209, 196, 0.07), transparent 60%),
+      linear-gradient(180deg, #18202a 0%, #131a22 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 40px 80px -40px rgba(0, 0, 0, 0.75);
   }
 }
 
-/* Diagram flow animation: dashes travel along an edge on hover/focus of the owning card. */
-@keyframes flow-dash {
-  to {
-    stroke-dashoffset: -24;
-  }
-}
-
-.diagram-edge-flow {
-  stroke-dasharray: 4 8;
-  opacity: 0;
-  transition: opacity 300ms var(--ease-out-expo);
-}
-
-.group:hover .diagram-edge-flow,
-.group:focus-within .diagram-edge-flow,
-.diagram-live .diagram-edge-flow {
-  opacity: 1;
-  animation: flow-dash 900ms linear infinite;
-}
-
+/* Packets travelling along diagram edges. Hidden when motion is reduced. */
 @media (prefers-reduced-motion: reduce) {
-  .group:hover .diagram-edge-flow,
-  .group:focus-within .diagram-edge-flow,
-  .diagram-live .diagram-edge-flow {
-    animation: none;
-    opacity: 0;
+  .packets {
+    display: none;
   }
 }

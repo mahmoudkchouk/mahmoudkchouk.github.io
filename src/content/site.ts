@@ -121,60 +121,43 @@ export const experience: ExperienceItem[] = [
   },
 ];
 
-export type SkillDomain = {
+export type Capability = {
   name: L;
-  summary: L;
-  tools: string[];
+  tools: L;
+  /** Project slugs that back the claim. */
+  proof: string[];
 };
 
-export const skills: SkillDomain[] = [
+export const capabilities: Capability[] = [
   {
-    name: { fr: "Embarqué & robotique", en: "Embedded & robotics" },
-    summary: {
-      fr: "C embarqué sur microcontrôleur, acquisition et traitement du signal, asservissement PID, modules noyau Linux, nodes ROS.",
-      en: "Embedded C on microcontrollers, signal acquisition and processing, PID control, Linux kernel modules, ROS nodes.",
-    },
-    tools: ["C", "ESP32", "STM32", "dsPIC", "Raspberry Pi", "IMU", "ROS Noetic", "Gazebo", "TurtleBot3", "ABB RobotStudio"],
+    name: { fr: "Systèmes embarqués", en: "Embedded systems" },
+    tools: { fr: "C, temps réel, traitement du signal, Linux embarqué", en: "C, real time, signal processing, embedded Linux" },
+    proof: ["esp32c6-rfid-iot", "traitement-signal-dspic", "linux-embarque-raspberry-pi"],
   },
   {
-    name: { fr: "IoT & edge", en: "IoT & edge" },
-    summary: {
-      fr: "Collecte de données terrain, passerelles, protocoles industriels et plateformes IoT.",
-      en: "Field data collection, gateways, industrial protocols and IoT platforms.",
-    },
-    tools: ["Modbus TCP", "LoRaWAN", "MQTT", "ThingsBoard", "InfluxDB"],
+    name: { fr: "ESP32 et microcontrôleurs", en: "ESP32 and microcontrollers" },
+    tools: { fr: "ESP32-C6 (ESP-IDF), UART, GPIO, dsPIC30F6014, STM32, centrale inertielle, PID", en: "ESP32-C6 (ESP-IDF), UART, GPIO, dsPIC30F6014, STM32, IMU, PID" },
+    proof: ["esp32c6-rfid-iot", "gimbal-2-axes-esp32", "traitement-signal-dspic"],
   },
   {
-    name: { fr: "DevOps & cloud", en: "DevOps & cloud" },
-    summary: {
-      fr: "Infrastructure décrite en code, conteneurs, déploiements reproductibles et secrets maîtrisés.",
-      en: "Infrastructure as code, containers, repeatable deployments and managed secrets.",
-    },
-    tools: ["Docker", "Docker Compose", "Linux", "Terraform", "Ansible", "Scaleway", "Vault", "GitHub Actions"],
+    name: { fr: "Architecture IoT", en: "IoT architecture" },
+    tools: { fr: "Modbus TCP, LoRaWAN, MQTT, passerelles edge, ThingsBoard", en: "Modbus TCP, LoRaWAN, MQTT, edge gateways, ThingsBoard" },
+    proof: ["plateforme-iot-edge-cloud", "esp32c6-rfid-iot", "nalen"],
   },
   {
-    name: { fr: "Observabilité", en: "Observability" },
-    summary: {
-      fr: "Métriques, logs et contrôles de santé pour savoir ce qui se passe en production.",
-      en: "Metrics, logs and health checks to know what is happening in production.",
-    },
-    tools: ["Grafana", "Loki", "Mimir", "Alloy", "cAdvisor", "Health checks"],
+    name: { fr: "Infrastructure cloud", en: "Cloud infrastructure" },
+    tools: { fr: "Terraform, Ansible, Docker Compose, Scaleway, Vault, GitHub Actions", en: "Terraform, Ansible, Docker Compose, Scaleway, Vault, GitHub Actions" },
+    proof: ["plateforme-iot-edge-cloud"],
   },
   {
-    name: { fr: "Développement & data", en: "Software & data" },
-    summary: {
-      fr: "Services backend, API REST, bases de données et interfaces web.",
-      en: "Backend services, REST APIs, databases and web interfaces.",
-    },
-    tools: ["Python", "FastAPI", "PostgreSQL", "SQL", "Alembic", "Node.js", "React", "JavaScript", "REST APIs"],
+    name: { fr: "Supervision et observabilité", en: "Monitoring and observability" },
+    tools: { fr: "Grafana, Loki, Mimir, Alloy, cAdvisor, InfluxDB, contrôles de santé", en: "Grafana, Loki, Mimir, Alloy, cAdvisor, InfluxDB, health checks" },
+    proof: ["plateforme-iot-edge-cloud"],
   },
   {
-    name: { fr: "Automatisme & systèmes", en: "Automation & systems" },
-    summary: {
-      fr: "Automates, réseaux industriels, virtualisation et sécurité des systèmes.",
-      en: "PLCs, industrial networks, virtualisation and system security.",
-    },
-    tools: ["Automates Schneider", "Langage ST", "Réseaux", "Virtualisation", "Cybersécurité", "MATLAB", "Java"],
+    name: { fr: "Logiciel industriel et automatisme", en: "Industrial software and automation" },
+    tools: { fr: "Python, FastAPI, PostgreSQL, React, ROS, automates Schneider, langage ST", en: "Python, FastAPI, PostgreSQL, React, ROS, Schneider PLCs, Structured Text" },
+    proof: ["nalen", "robotique-mobile-ros", "robot-abb-irb120"],
   },
 ];
 

@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { isLocale, locales, ui, type Locale } from "@/lib/i18n";
 import { getProject, projects } from "@/content/projects";
-import { ArchitectureDiagram } from "@/components/ArchitectureDiagram";
-import { Tag } from "@/components/Sections";
+import { SystemDiagram } from "@/components/SystemDiagram";
+import { PidSimulator } from "@/components/PidSimulator";
+import { TrajectoryVisual } from "@/components/TrajectoryVisual";
 
 type Params = Promise<{ locale: string; slug: string }>;
 
@@ -30,6 +31,17 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   };
 }
 
+function Block({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
+  return (
+    <section id={id} aria-labelledby={`${id}-title`} className="grid gap-6 border-t border-line pt-10 lg:grid-cols-12 lg:gap-8">
+      <h2 id={`${id}-title`} className="text-2xl font-medium tracking-[-0.015em] text-fg lg:col-span-4">
+        {title}
+      </h2>
+      <div className="lg:col-span-8">{children}</div>
+    </section>
+  );
+}
+
 export default async function CaseStudy({ params }: { params: Params }) {
   const { locale: raw, slug } = await params;
   if (!isLocale(raw)) notFound();
@@ -37,28 +49,23 @@ export default async function CaseStudy({ params }: { params: Params }) {
   const p = getProject(slug);
   if (!p) notFound();
   const t = ui[locale].caseStudy;
-  const tp = ui[locale].projects;
 
   const index = projects.findIndex((x) => x.slug === slug);
-  const prev = projects[(index - 1 + projects.length) % projects.length];
   const next = projects[(index + 1) % projects.length];
 
   const meta = [
-    p.period && { k: tp.period, v: p.period[locale] },
-    p.context && { k: tp.context, v: p.context[locale] },
-    { k: tp.domain, v: p.domain[locale] },
+    p.period && { k: t.period, v: p.period[locale] },
+    p.context && { k: t.context, v: p.context[locale] },
+    { k: t.domain, v: p.domain[locale] },
   ].filter(Boolean) as { k: string; v: string }[];
 
-  const toc = [
-    { id: "objective", label: t.objective },
-    { id: "work", label: t.work },
-    ...(p.diagrams.length ? [{ id: "architecture", label: t.architecture }] : []),
-    { id: "stack", label: t.stack },
-  ];
+  // The lead visual: the interactive model for the gimbal, otherwise the first diagram.
+  const leadDiagram = p.showcase === "pid" ? null : p.diagrams[0];
+  const figures = p.showcase === "pid" ? p.diagrams : p.diagrams.slice(1);
 
   return (
-    <article className="pb-24 pt-28 sm:pt-36">
-      <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
+    <article className="pb-10 pt-28 sm:pt-32">
+      <div className="mx-auto max-w-[1320px] px-5 sm:px-8">
         <Link
           href={`/${locale}/#projects`}
           className="inline-flex min-h-11 items-center gap-2 text-[0.9375rem] text-fg-muted transition-colors hover:text-fg"
@@ -67,125 +74,113 @@ export default async function CaseStudy({ params }: { params: Params }) {
           {t.back}
         </Link>
 
-        <header className="mt-8">
-          <h1 className="max-w-[18ch] font-display text-5xl font-semibold leading-[1.02] tracking-[-0.025em] text-fg sm:text-6xl">
-            {p.title[locale]}
-          </h1>
-          <p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-muted sm:text-xl">{p.summary[locale]}</p>
-
-          {/* Document title block */}
-          <dl className={`mt-12 grid overflow-hidden rounded-[10px] border border-line ${meta.length === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
-            {meta.map((m, i) => (
-              <div
-                key={m.k}
-                className={`px-5 py-4 ${i > 0 ? "border-t border-line sm:border-l sm:border-t-0" : ""}`}
-              >
-                <dt className="text-[0.8125rem] text-fg-subtle">{m.k}</dt>
-                <dd className="tabular mt-1 text-fg">{m.v}</dd>
+        <header className="mt-10 grid gap-10 lg:grid-cols-12 lg:items-end lg:gap-8">
+          <div className="lg:col-span-8">
+            <h1 className="max-w-[16ch] text-hero font-medium text-fg">{p.title[locale]}</h1>
+            <p className="mt-6 max-w-[52ch] text-lg leading-relaxed text-fg-muted sm:text-xl">{p.summary[locale]}</p>
+          </div>
+          <dl className="grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-3 lg:col-span-4 lg:grid-cols-1">
+            {meta.map((m) => (
+              <div key={m.k}>
+                <dt className="text-[0.875rem] text-fg-subtle">{m.k}</dt>
+                <dd className="tabular mt-0.5 text-fg">{m.v}</dd>
               </div>
             ))}
           </dl>
         </header>
 
-        <div className="mt-16 grid gap-12 lg:grid-cols-12 lg:gap-8">
-          <nav aria-label={locale === "fr" ? "Sommaire" : "Contents"} className="hidden lg:col-span-3 lg:block">
-            <ol className="sticky top-28 space-y-1 border-l border-line">
-              {toc.map((s) => (
-                <li key={s.id}>
-                  <a
-                    href={`#${s.id}`}
-                    className="-ml-px block border-l border-transparent py-1.5 pl-4 text-[0.9375rem] text-fg-muted transition-colors hover:border-fg-muted hover:text-fg"
-                  >
-                    {s.label}
-                  </a>
+        <div className="mt-14 sm:mt-20">
+          {p.showcase === "pid" ? (
+            <>
+              <PidSimulator locale={locale} />
+              <p className="mt-4 max-w-[70ch] text-[0.9375rem] leading-relaxed text-fg-subtle">{ui[locale].pid.caption}</p>
+            </>
+          ) : leadDiagram ? (
+            <figure>
+              <div className="plate rounded-[24px] p-5 sm:p-10 lg:p-14">
+                <SystemDiagram diagram={leadDiagram} locale={locale} id={`lead-${p.slug}`} stackBelow="md" />
+              </div>
+              <figcaption className="mt-4 max-w-[70ch] text-[0.9375rem] text-fg-subtle">
+                <span className="text-fg-muted">{t.figure} 1.</span> {leadDiagram.caption[locale]}
+              </figcaption>
+            </figure>
+          ) : p.slug === "robot-abb-irb120" ? (
+            <div className="plate mx-auto rounded-[24px] p-8 sm:p-14">
+              <div className="mx-auto max-w-[640px]">
+                <TrajectoryVisual locale={locale} />
+              </div>
+            </div>
+          ) : null}
+        </div>
+
+        <div className="mt-20 space-y-16 sm:mt-28">
+          <Block id="problem" title={t.objective}>
+            <p className="max-w-[62ch] text-lg leading-relaxed text-fg-muted">{p.objective[locale]}</p>
+          </Block>
+
+          <Block id="work" title={t.work}>
+            <ul className="max-w-[62ch] space-y-4">
+              {p.work[locale].map((w) => (
+                <li key={w} className="relative pl-6 leading-relaxed text-fg-muted">
+                  <span aria-hidden className="absolute left-0 top-[0.72em] h-1.5 w-1.5 rounded-full bg-fg-subtle" />
+                  {w}
                 </li>
               ))}
-            </ol>
-          </nav>
+            </ul>
+          </Block>
 
-          <div className="min-w-0 lg:col-span-9">
-            <section id="objective" aria-labelledby="objective-title">
-              <h2 id="objective-title" className="font-display text-3xl font-semibold tracking-[-0.015em] text-fg">
-                {t.objective}
-              </h2>
-              <p className="measure mt-4 text-lg leading-relaxed text-fg-muted">{p.objective[locale]}</p>
-            </section>
-
-            <section id="work" aria-labelledby="work-title" className="mt-16">
-              <h2 id="work-title" className="font-display text-3xl font-semibold tracking-[-0.015em] text-fg">
-                {t.work}
-              </h2>
-              <ul className="measure mt-6 space-y-4">
-                {p.work[locale].map((w) => (
-                  <li key={w} className="relative pl-6 leading-relaxed text-fg-muted">
-                    <span aria-hidden className="absolute left-0 top-[0.7em] h-px w-3 bg-fg-subtle" />
-                    {w}
+          {p.challenges[locale].length > 0 && (
+            <Block id="challenges" title={t.challenges}>
+              <ol className="grid gap-4 sm:grid-cols-2">
+                {p.challenges[locale].map((c) => (
+                  <li key={c} className="rounded-[16px] bg-surface p-5 leading-relaxed text-fg">
+                    {c}
                   </li>
                 ))}
-              </ul>
-            </section>
+              </ol>
+            </Block>
+          )}
 
-            {p.diagrams.length > 0 && (
-              <section id="architecture" aria-labelledby="architecture-title" className="mt-16">
-                <h2 id="architecture-title" className="font-display text-3xl font-semibold tracking-[-0.015em] text-fg">
-                  {t.architecture}
-                </h2>
-                {p.diagrams.map((d, i) => (
-                  <figure key={i} className="mt-8">
-                    <div
-                      className="group overflow-x-auto rounded-[var(--radius-card)] border border-line bg-surface/50 p-5 sm:p-8"
-                      tabIndex={0}
-                      aria-label={`${t.figure} ${i + 1}. ${t.scrollHint}`}
-                    >
-                      <ArchitectureDiagram diagram={d} locale={locale} id={`fig-${p.slug}-${i}`} live />
+          {figures.length > 0 && (
+            <Block id="architecture" title={t.architecture}>
+              <div className="space-y-10">
+                {figures.map((d, i) => (
+                  <figure key={i}>
+                    <div className="plate rounded-[20px] p-5 sm:p-8">
+                      <SystemDiagram diagram={d} locale={locale} id={`fig-${p.slug}-${i}`} stackBelow="lg" />
                     </div>
                     <figcaption className="mt-3 text-[0.9375rem] text-fg-subtle">
                       <span className="text-fg-muted">
-                        {t.figure} {i + 1}.
+                        {t.figure} {(leadDiagram ? 2 : 1) + i}.
                       </span>{" "}
                       {d.caption[locale]}
                     </figcaption>
                   </figure>
                 ))}
-              </section>
-            )}
+              </div>
+            </Block>
+          )}
 
-            <section id="stack" aria-labelledby="stack-title" className="mt-16">
-              <h2 id="stack-title" className="font-display text-3xl font-semibold tracking-[-0.015em] text-fg">
-                {t.stack}
-              </h2>
-              <ul className="mt-6 flex flex-wrap gap-2">
-                {p.stack.map((s) => (
-                  <Tag key={s}>{s}</Tag>
-                ))}
-              </ul>
-            </section>
-
-            <nav
-              aria-label={locale === "fr" ? "Autres projets" : "More projects"}
-              className="mt-24 grid gap-3 border-t border-line pt-8 sm:grid-cols-2"
-            >
-              <Link
-                href={`/${locale}/projects/${prev.slug}/`}
-                className="group rounded-lg border border-line p-5 transition-colors hover:border-line-strong hover:bg-surface"
-              >
-                <span className="flex items-center gap-2 text-[0.875rem] text-fg-subtle">
-                  <ArrowLeft size={16} strokeWidth={1.75} aria-hidden /> {t.prev}
-                </span>
-                <span className="mt-2 block font-display text-xl font-medium text-fg">{prev.title[locale]}</span>
-              </Link>
-              <Link
-                href={`/${locale}/projects/${next.slug}/`}
-                className="group rounded-lg border border-line p-5 text-right transition-colors hover:border-line-strong hover:bg-surface"
-              >
-                <span className="flex items-center justify-end gap-2 text-[0.875rem] text-fg-subtle">
-                  {t.next} <ArrowRight size={16} strokeWidth={1.75} aria-hidden />
-                </span>
-                <span className="mt-2 block font-display text-xl font-medium text-fg">{next.title[locale]}</span>
-              </Link>
-            </nav>
-          </div>
+          <Block id="stack" title={t.stack}>
+            <p className="max-w-[62ch] text-lg leading-relaxed text-fg-muted">{p.stack.join(", ")}</p>
+          </Block>
         </div>
+
+        <Link
+          href={`/${locale}/projects/${next.slug}/`}
+          className="group mt-28 block border-t border-line py-14 sm:mt-36 sm:py-20"
+        >
+          <span className="text-[0.9375rem] text-fg-subtle">{t.next}</span>
+          <span className="mt-3 flex items-center justify-between gap-6">
+            <span className="text-title font-medium text-fg transition-colors group-hover:text-white">{next.title[locale]}</span>
+            <ArrowUpRight
+              size={36}
+              strokeWidth={1.25}
+              aria-hidden
+              className="shrink-0 text-fg-muted transition-transform duration-300 ease-[var(--ease-out-expo)] group-hover:-translate-y-1 group-hover:translate-x-1"
+            />
+          </span>
+        </Link>
       </div>
     </article>
   );
