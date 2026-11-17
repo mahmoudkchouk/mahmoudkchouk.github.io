@@ -24,7 +24,7 @@
 
   --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
 
-  --text-hero: clamp(2.5rem, 1.6rem + 2.6vw, 3.9rem);
+  --text-hero: clamp(2.25rem, 1.5rem + 2.2vw, 3.5rem);
   --text-hero--line-height: 1.04;
   --text-hero--letter-spacing: -0.032em;
 

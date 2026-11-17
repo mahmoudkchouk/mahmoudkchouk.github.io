@@ -31,7 +31,7 @@ export const ui = {
     menu: "Ouvrir le menu",
     closeMenu: "Fermer le menu",
     hero: {
-      title: "Je construis des systèmes connectés, du capteur au cloud.",
+      title: "Du microcontrôleur au cloud, de la conception à la production.",
       lead: "Mahmoud Kchouk, élève-ingénieur à l'UTT. Embarqué, IoT industriel, infrastructure et supervision.",
       ctaProjects: "Voir les projets",
       ctaContact: "Me contacter",
@@ -116,7 +116,7 @@ export const ui = {
     menu: "Open menu",
     closeMenu: "Close menu",
     hero: {
-      title: "I build connected systems, from sensor to cloud.",
+      title: "From microcontroller to cloud, from design to production.",
       lead: "Mahmoud Kchouk, engineering student at UTT, France. Embedded, industrial IoT, infrastructure and monitoring.",
       ctaProjects: "View projects",
       ctaContact: "Get in touch",
