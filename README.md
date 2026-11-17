@@ -41,4 +41,8 @@ The workflow also works from any other repository name: the base path is picked 
 
 ## Design notes
 
-Anthracite ground, aluminium text, one pilot-lamp amber reserved for availability and keyboard focus, steel blue for data flow. Barlow and Barlow Semi Condensed (DIN-like industrial lettering), IBM Plex Mono only inside diagrams. The one orchestrated animation is the signal travelling along the sensor-to-cloud chain in the hero; it is skipped when the visitor asks for reduced motion.
+Direction "Système en lumière": ink-blue ground, cool silver text, Instrument Sans throughout, and one sea-glass accent that only ever means "live" (data in motion, availability, keyboard focus).
+
+- The hero shows the real Cascadya platform as a lit plate, with data packets travelling through it. Packets are hidden when the visitor asks for reduced motion.
+- System diagrams are plain data (`src/content/projects.ts`) rendered by `SystemDiagram`: lanes run left to right on wide screens and top to bottom on phones, so diagrams never need horizontal scrolling.
+- The gimbal project carries an interactive PID model (`PidSimulator`). Its constants are illustrative and labelled as such on the page.

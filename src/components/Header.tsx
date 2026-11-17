@@ -27,23 +27,22 @@ export function Header({ locale }: { locale: Locale }) {
   }, [open]);
 
   const links = [
-    { href: `/${locale}/#experience`, label: t.nav.experience },
     { href: `/${locale}/#projects`, label: t.nav.projects },
     { href: `/${locale}/#expertise`, label: t.nav.expertise },
-    { href: `/${locale}/#background`, label: t.nav.background },
+    { href: `/${locale}/#experience`, label: t.nav.experience },
     { href: `/${locale}/#contact`, label: t.nav.contact },
   ];
 
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color] duration-300 ${
-        scrolled || open ? "border-line bg-ground/95" : "border-transparent bg-ground/0"
+        scrolled || open ? "border-line bg-ink/90 backdrop-blur-md" : "border-transparent bg-transparent"
       }`}
     >
-      <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-5 sm:px-8">
+      <div className="mx-auto flex h-16 max-w-[1320px] items-center justify-between px-5 sm:px-8">
         <Link
           href={`/${locale}/`}
-          className="font-display text-[1.0625rem] font-semibold tracking-[-0.01em] text-fg"
+          className="text-[1.0625rem] font-medium tracking-[-0.01em] text-fg"
           onClick={() => setOpen(false)}
         >
           Mahmoud Kchouk
@@ -76,8 +75,8 @@ export function Header({ locale }: { locale: Locale }) {
       </div>
 
       {open && (
-        <nav id="mobile-nav" aria-label={t.navLabel} className="border-t border-line bg-ground md:hidden">
-          <ul className="mx-auto max-w-[1200px] px-5 py-3">
+        <nav id="mobile-nav" aria-label={t.navLabel} className="border-t border-line bg-ink md:hidden">
+          <ul className="mx-auto max-w-[1320px] px-5 py-3">
             {links.map((l) => (
               <li key={l.href}>
                 <a

@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 export const viewport: Viewport = {
-  themeColor: "#15171a",
+  themeColor: "#0d1117",
   colorScheme: "dark",
 };
 
@@ -73,10 +73,10 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale}>
-      <body className="bg-ground text-fg">
+      <body className="bg-ink text-fg">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-fg focus:px-4 focus:py-2 focus:text-ground"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-fg focus:px-4 focus:py-2 focus:text-ink"
         >
           {t.skip}
         </a>

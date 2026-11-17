@@ -1,130 +1,97 @@
 "use client";
 
+import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
-import { ArrowDown, Download } from "lucide-react";
+import { ArrowUpRight, Download } from "lucide-react";
 import { ui, asset, type Locale } from "@/lib/i18n";
 import { profile } from "@/content/site";
-
-const stations = {
-  fr: [
-    { name: "Capteurs", detail: "Centrale inertielle 6 axes, capteur de gaz, codec SI3000" },
-    { name: "Embarqué", detail: "C sur ESP32, dsPIC et STM32, modules noyau Linux" },
-    { name: "Edge et protocoles", detail: "Modbus TCP, LoRaWAN, passerelles de collecte" },
-    { name: "Cloud et déploiement", detail: "Terraform, Ansible, Docker, Scaleway, GitHub Actions" },
-    { name: "Supervision et données", detail: "ThingsBoard, PostgreSQL, InfluxDB, Grafana" },
-  ],
-  en: [
-    { name: "Sensors", detail: "6-axis IMU, gas sensor, SI3000 codec" },
-    { name: "Embedded", detail: "C on ESP32, dsPIC and STM32, Linux kernel modules" },
-    { name: "Edge and protocols", detail: "Modbus TCP, LoRaWAN, collection gateways" },
-    { name: "Cloud and delivery", detail: "Terraform, Ansible, Docker, Scaleway, GitHub Actions" },
-    { name: "Monitoring and data", detail: "ThingsBoard, PostgreSQL, InfluxDB, Grafana" },
-  ],
-};
+import { heroDiagram, projects } from "@/content/projects";
+import { SystemDiagram } from "./SystemDiagram";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
-const RAIL_DELAY = 0.35;
-const RAIL_DURATION = 1.8;
 
 export function Hero({ locale }: { locale: Locale }) {
   const t = ui[locale].hero;
   const reduce = useReducedMotion();
-  const list = stations[locale];
+  const cascadya = projects[0];
 
-  // Lamp i switches on when the signal reaches it along the rail.
-  const lampDelay = (i: number) => RAIL_DELAY + (RAIL_DURATION * 0.62 * i) / (list.length - 1);
+  const rise = (delay: number) =>
+    reduce
+      ? {}
+      : {
+          initial: { opacity: 0, y: 14 },
+          animate: { opacity: 1, y: 0 },
+          transition: { delay, duration: 0.7, ease: EASE },
+        };
 
   return (
-    <section aria-labelledby="hero-title" className="relative pt-32 sm:pt-40">
-      <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
-        <h1 id="hero-title">
-          <span className="block font-sans text-lg font-medium text-fg-muted sm:text-xl">
-            {profile.name}
-            <span className="sr-only">, </span>
-          </span>
-          <span className="mt-4 block font-display text-display font-semibold text-fg">{t.title}</span>
-        </h1>
-
-        <p className="measure mt-8 max-w-[60ch] text-lg leading-[1.6] text-fg-muted sm:text-xl sm:leading-[1.55]">
-          {t.lead}
-        </p>
-
-        <div className="mt-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          <div className="flex flex-wrap items-center gap-3">
+    <section aria-labelledby="hero-title" className="relative overflow-hidden">
+      <div className="mx-auto grid max-w-[1320px] items-center gap-14 px-5 pb-20 pt-32 sm:px-8 sm:pt-36 lg:min-h-[min(100svh,880px)] lg:grid-cols-[minmax(0,4.3fr)_minmax(0,7.7fr)] lg:gap-12 lg:pb-14 lg:pt-28 xl:gap-20">
+        <div className="max-w-[34rem]">
+          <motion.h1 id="hero-title" className="text-hero font-medium text-fg" {...rise(0.05)}>
+            {t.title}
+          </motion.h1>
+          <motion.p className="mt-6 max-w-[30rem] text-lg leading-relaxed text-fg-muted" {...rise(0.15)}>
+            {t.lead}
+          </motion.p>
+          <motion.div className="mt-10 flex flex-wrap items-center gap-3" {...rise(0.25)}>
             <a
               href={`/${locale}/#projects`}
-              className="inline-flex min-h-12 items-center gap-2 rounded-lg bg-fg px-5 font-medium text-ground transition-colors duration-200 hover:bg-white"
+              className="inline-flex min-h-12 items-center rounded-full bg-fg px-6 font-medium text-ink transition-colors duration-200 hover:bg-white"
             >
               {t.ctaProjects}
-              <ArrowDown size={18} strokeWidth={1.75} aria-hidden />
             </a>
             <a
               href={asset(profile.cv)}
               download
-              className="inline-flex min-h-12 items-center gap-2 rounded-lg border border-line-strong px-5 font-medium text-fg transition-colors duration-200 hover:border-fg-subtle hover:bg-surface"
+              className="inline-flex min-h-12 items-center gap-2 rounded-full border border-line-strong px-6 font-medium text-fg transition-colors duration-200 hover:border-fg-subtle hover:bg-surface"
             >
-              <Download size={18} strokeWidth={1.75} aria-hidden />
+              <Download size={17} strokeWidth={1.75} aria-hidden />
               {t.ctaCv}
             </a>
+          </motion.div>
+          <motion.p className="mt-10 flex items-center gap-3 text-[0.9375rem] text-fg-muted" {...rise(0.35)}>
+            <span className="relative flex h-2 w-2" aria-hidden>
+              <span className="absolute inset-0 rounded-full bg-live" />
+              {!reduce && <span className="absolute inset-0 animate-ping rounded-full bg-live opacity-40 [animation-duration:2.4s]" />}
+            </span>
+            {t.status}
+          </motion.p>
+        </div>
+
+        {/* The showcase plate: the real Cascadya system, data in motion. */}
+        <motion.figure
+          className="relative"
+          initial={reduce ? false : { opacity: 0, y: 24, scale: 0.985 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: 0.2, duration: 1, ease: EASE }}
+        >
+          <div className="plate rounded-[24px] p-5 sm:p-8 lg:p-9">
+            <p className="mb-5 flex items-center gap-2.5 text-[0.8125rem] text-fg-subtle sm:mb-7">
+              <span className="h-1.5 w-1.5 rounded-full bg-live" aria-hidden />
+              {t.plateLive}
+            </p>
+            <SystemDiagram diagram={heroDiagram} locale={locale} id="hero" stackBelow="md" compact />
           </div>
-
-          <p className="flex items-start gap-3 text-[0.9375rem] leading-snug">
-            <span className="relative mt-[0.3rem] inline-flex h-2.5 w-2.5 shrink-0" aria-hidden>
-              <span className="absolute inset-0 rounded-full bg-signal" />
-              <span className="absolute -inset-1 rounded-full border border-signal/40" />
-            </span>
+          <figcaption className="mt-5 flex flex-col gap-3 px-1 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
             <span>
-              <span className="block text-fg">{t.status}</span>
-              <span className="block text-fg-muted">{t.statusDetail}</span>
+              <span className="block text-lg font-medium text-fg">{t.plateTitle}</span>
+              <span className="mt-1 block text-[0.9375rem] text-fg-subtle">{t.plateMeta}</span>
             </span>
-          </p>
-        </div>
-
-        {/* The chain: one signal travels from sensor to monitoring, once. */}
-        <div className="mt-20 border-t border-line pt-10 sm:mt-24">
-          <h2 className="sr-only">{t.chainLabel}</h2>
-          <ol className="relative grid gap-8 pl-7 lg:grid-cols-5 lg:gap-6 lg:pl-0 lg:pt-8">
-            {/* Rail, horizontal on desktop */}
-            <span aria-hidden className="absolute left-0 right-0 top-[3px] hidden h-px bg-line lg:block" />
-            <motion.span
-              aria-hidden
-              className="absolute left-0 right-0 top-[3px] hidden h-px origin-left bg-flow lg:block"
-              initial={reduce ? false : { scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ delay: RAIL_DELAY, duration: RAIL_DURATION, ease: EASE }}
-            />
-            {/* Rail, vertical on mobile */}
-            <span aria-hidden className="absolute bottom-2 left-[3px] top-2 w-px bg-line lg:hidden" />
-            <motion.span
-              aria-hidden
-              className="absolute bottom-2 left-[3px] top-2 w-px origin-top bg-flow lg:hidden"
-              initial={reduce ? false : { scaleY: 0 }}
-              animate={{ scaleY: 1 }}
-              transition={{ delay: RAIL_DELAY, duration: RAIL_DURATION, ease: EASE }}
-            />
-
-            {list.map((s, i) => (
-              <li key={s.name} className="relative">
-                <motion.span
-                  aria-hidden
-                  className="absolute -left-7 top-[0.45rem] h-[7px] w-[7px] rounded-full lg:-top-8 lg:left-0"
-                  initial={reduce ? false : { backgroundColor: "#3e454d", scale: 1 }}
-                  animate={
-                    reduce
-                      ? { backgroundColor: "#8fb3d1" }
-                      : {
-                          backgroundColor: ["#3e454d", "#eceef0", "#8fb3d1"],
-                          scale: [1, 1.6, 1],
-                        }
-                  }
-                  transition={{ delay: lampDelay(i), duration: 0.9, ease: EASE, times: [0, 0.25, 1] }}
-                />
-                <span className="block font-display text-xl font-medium tracking-[-0.01em] text-fg">{s.name}</span>
-                <span className="mt-2 block text-[0.9375rem] leading-relaxed text-fg-muted">{s.detail}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
+            <Link
+              href={`/${locale}/projects/${cascadya.slug}/`}
+              className="group inline-flex min-h-11 shrink-0 items-center gap-1.5 text-[0.9375rem] font-medium text-fg"
+            >
+              {t.plateLink}
+              <ArrowUpRight
+                size={17}
+                strokeWidth={1.75}
+                aria-hidden
+                className="transition-transform duration-300 ease-[var(--ease-out-expo)] group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              />
+            </Link>
+          </figcaption>
+        </motion.figure>
       </div>
     </section>
   );

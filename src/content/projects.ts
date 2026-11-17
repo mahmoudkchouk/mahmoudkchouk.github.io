@@ -20,6 +20,7 @@ export type DiagramEdge = {
 };
 
 export type Diagram = {
+  lanes?: { col: number; label: L }[];
   cols: number;
   rows: number;
   nodes: DiagramNode[];
@@ -37,8 +38,12 @@ export type Project = {
   stack: string[];
   objective: L;
   work: L<string[]>;
+  /** Engineering problems the project had to handle, stated as in the CV. */
+  challenges: L<string[]>;
   diagrams: Diagram[];
   featured?: boolean;
+  /** What the showcase visual is: a system diagram or the interactive PID model. */
+  showcase?: "diagram" | "pid";
 };
 
 const t = (fr: string, en: string): L => ({ fr, en });
@@ -47,6 +52,7 @@ export const projects: Project[] = [
   {
     slug: "plateforme-iot-edge-cloud",
     featured: true,
+    showcase: "diagram",
     title: t("Plateforme IoT edge-cloud", "Edge-to-cloud IoT platform"),
     summary: t(
       "Infrastructure IoT industrielle sur Scaleway, de la collecte terrain à la supervision Grafana, décrite en code et déployée en production.",
@@ -81,28 +87,56 @@ export const projects: Project[] = [
         "Hardened Python/FastAPI services: task scheduling, state persistence, duplicate-run locking, time zones and health checks.",
       ],
     },
+    challenges: {
+      fr: [
+        "Valider les échanges de données avant d'avoir le matériel : simulateurs de télémétrie et agents Modbus.",
+        "Mettre en production sans rien perdre : versions d'images, sauvegardes PostgreSQL, migrations Alembic, contrôles après déploiement.",
+        "Éviter qu'une tâche planifiée s'exécute deux fois : verrouillage, persistance d'état, fuseaux horaires.",
+        "Savoir ce qui se passe en production : métriques, logs et contrôles de santé.",
+      ],
+      en: [
+        "Validating data exchange before the hardware exists: telemetry simulators and Modbus agents.",
+        "Shipping to production without losing anything: image versions, PostgreSQL backups, Alembic migrations, post-deployment checks.",
+        "Making sure a scheduled job never runs twice: locking, state persistence, time zones.",
+        "Knowing what happens in production: metrics, logs and health checks.",
+      ],
+    },
     diagrams: [
       {
+        lanes: [
+          { col: 0, label: t("Terrain", "Field") },
+          { col: 1, label: t("Edge", "Edge") },
+          { col: 2, label: t("Plateforme", "Platform") },
+          { col: 3, label: t("Données", "Data") },
+          { col: 4, label: t("Supervision", "Monitoring") },
+        ],
         cols: 5,
-        rows: 2,
+        rows: 3,
         nodes: [
-          { id: "field", col: 0, row: 0, label: t("Équipements terrain", "Field equipment"), sub: t("capteur gaz, LoRaWAN", "gas sensor, LoRaWAN") },
-          { id: "sim", col: 0, row: 1, label: t("Simulateurs hot/cold", "Hot/cold simulators"), sub: t("télémétrie de test", "test telemetry"), tone: "muted" },
-          { id: "edge", col: 1, row: 0, rowSpan: 2, label: t("Passerelles et agents", "Gateways and agents"), sub: t("collecte, Modbus", "collection, Modbus") },
-          { id: "tb", col: 2, row: 0, rowSpan: 2, label: t("ThingsBoard", "ThingsBoard"), sub: t("plateforme IoT", "IoT platform"), tone: "focus" },
-          { id: "db", col: 3, row: 0, rowSpan: 2, label: t("PostgreSQL, InfluxDB", "PostgreSQL, InfluxDB"), sub: t("stockage", "storage") },
-          { id: "graf", col: 4, row: 0, rowSpan: 2, label: t("Grafana", "Grafana"), sub: t("supervision", "monitoring") },
+          { id: "gas", col: 0, row: 0, label: t("Capteur de gaz", "Gas sensor"), sub: t("consommation", "consumption") },
+          { id: "lora", col: 0, row: 1, label: t("Équipements", "Equipment"), sub: t("LoRaWAN, Modbus", "LoRaWAN, Modbus") },
+          { id: "sim", col: 0, row: 2, label: t("Simulateurs", "Simulators"), sub: t("télémétrie hot/cold", "hot/cold telemetry"), tone: "muted" },
+          { id: "gw", col: 1, row: 0, rowSpan: 2, label: t("Passerelles", "Gateways"), sub: t("collecte terrain", "field collection") },
+          { id: "agents", col: 1, row: 2, label: t("Agents Modbus", "Modbus agents"), sub: t("tests d'échanges", "exchange tests") },
+          { id: "tb", col: 2, row: 0, rowSpan: 3, label: t("ThingsBoard", "ThingsBoard"), sub: t("VM Scaleway, Docker", "Scaleway VM, Docker"), tone: "focus" },
+          { id: "pg", col: 3, row: 0, label: t("PostgreSQL", "PostgreSQL"), sub: t("base relationnelle", "relational") },
+          { id: "influx", col: 3, row: 2, label: t("InfluxDB", "InfluxDB"), sub: t("séries temporelles", "time series") },
+          { id: "graf", col: 4, row: 0, rowSpan: 3, label: t("Grafana", "Grafana"), sub: t("tableaux de bord", "dashboards") },
         ],
         edges: [
-          { from: "field", to: "edge" },
-          { from: "sim", to: "edge" },
-          { from: "edge", to: "tb" },
-          { from: "tb", to: "db" },
-          { from: "db", to: "graf" },
+          { from: "gas", to: "gw" },
+          { from: "lora", to: "gw" },
+          { from: "sim", to: "agents" },
+          { from: "gw", to: "tb" },
+          { from: "agents", to: "tb" },
+          { from: "tb", to: "pg" },
+          { from: "tb", to: "influx" },
+          { from: "pg", to: "graf" },
+          { from: "influx", to: "graf" },
         ],
         caption: t(
-          "Chaîne de données, vue d'ensemble simplifiée. Les composants hébergés tournent sur des VM Linux Scaleway.",
-          "Data path, simplified overview. Hosted components run on Scaleway Linux VMs.",
+          "Chaîne de données de la plateforme, vue simplifiée. Les services hébergés tournent sur des VM Linux Scaleway, déployées avec Terraform et Ansible.",
+          "The platform's data path, simplified. Hosted services run on Scaleway Linux VMs, provisioned with Terraform and Ansible.",
         ),
       },
       {
@@ -137,6 +171,7 @@ export const projects: Project[] = [
   {
     slug: "nalen",
     featured: true,
+    showcase: "diagram",
     title: t("NALEN, monitoring énergétique industriel", "NALEN, industrial energy monitoring"),
     summary: t(
       "Prototype de chaîne complète de collecte Modbus TCP qui détecte les dérives de consommation, les chiffre en kWh et en estime l'impact financier.",
@@ -160,6 +195,16 @@ export const projects: Project[] = [
         "Built the whole chain end to end: Modbus TCP edge collection gateway, API, database and React interface.",
         "Consumption drift detection, quantified in kWh with an estimate of the financial impact.",
         "Validated on simulated data.",
+      ],
+    },
+    challenges: {
+      fr: [
+        "Passer d'une mesure brute à une information utile : la dérive, son volume en kWh et son coût.",
+        "Construire et valider toute la chaîne sans site réel, sur données simulées.",
+      ],
+      en: [
+        "Turning raw readings into something useful: the drift, its size in kWh and its cost.",
+        "Building and validating the whole chain without a real site, on simulated data.",
       ],
     },
     diagrams: [
@@ -189,6 +234,7 @@ export const projects: Project[] = [
   {
     slug: "gimbal-2-axes-esp32",
     featured: true,
+    showcase: "pid",
     title: t("Gimbal 2 axes sur ESP32-C6", "2-axis gimbal on ESP32-C6"),
     summary: t(
       "Stabilisation d'orientation sur deux axes avec une centrale inertielle 6 axes et une commande PID temps réel.",
@@ -196,7 +242,7 @@ export const projects: Project[] = [
     ),
     period: t("juin 2026", "June 2026"),
     domain: t("Systèmes embarqués, automatique", "Embedded systems, control"),
-    stack: ["ESP32-C6", "C", "IMU 6 axes", "PID"],
+    stack: ["ESP32-C6", "C", "IMU", "PID"],
     objective: t(
       "Maintenir l'orientation d'une charge sur deux axes malgré les mouvements du support, en boucle fermée sur un microcontrôleur.",
       "Hold a payload's orientation on two axes despite movement of its base, in a closed loop running on a microcontroller.",
@@ -209,6 +255,16 @@ export const projects: Project[] = [
       en: [
         "Integrated a 6-axis IMU (accelerometer and gyroscope) with an ESP32-C6.",
         "Real-time PID control to stabilise orientation on each of the two axes.",
+      ],
+    },
+    challenges: {
+      fr: [
+        "Tenir une boucle de régulation temps réel sur un microcontrôleur.",
+        "Exploiter les mesures d'une centrale inertielle 6 axes pour connaître l'orientation.",
+      ],
+      en: [
+        "Holding a real-time control loop on a microcontroller.",
+        "Using a 6-axis IMU's readings to know the orientation.",
       ],
     },
     diagrams: [
@@ -259,6 +315,16 @@ export const projects: Project[] = [
         "Python nodes: publishers, subscribers, services and launch files.",
         "Worked with the /scan (lidar), /odom (odometry) and /cmd_vel (velocity command) topics.",
         "Navigation and SLAM in Gazebo simulation.",
+      ],
+    },
+    challenges: {
+      fr: [
+        "Organiser le logiciel du robot en nodes qui communiquent par topics et services.",
+        "Cartographier l'environnement et y naviguer (SLAM) en simulation.",
+      ],
+      en: [
+        "Structuring the robot's software as nodes talking through topics and services.",
+        "Mapping the environment and navigating it (SLAM) in simulation.",
       ],
     },
     diagrams: [
@@ -312,6 +378,16 @@ export const projects: Project[] = [
         "Used the dsPIC's PWM, ADC and UART peripherals.",
       ],
     },
+    challenges: {
+      fr: [
+        "Traiter chaque échantillon dans le temps imposé par une cadence fixe de 8 kHz.",
+        "Implémenter des filtres FIR et une DFT en C embarqué.",
+      ],
+      en: [
+        "Processing every sample within the time set by a fixed 8 kHz rate.",
+        "Implementing FIR filters and a DFT in embedded C.",
+      ],
+    },
     diagrams: [
       {
         cols: 4,
@@ -357,7 +433,32 @@ export const projects: Project[] = [
         "Study of real-time constraints on Linux.",
       ],
     },
-    diagrams: [],
+    challenges: {
+      fr: [
+        "Écrire du code qui s'exécute dans le noyau plutôt qu'en espace utilisateur.",
+        "Comprendre les limites temps réel d'un Linux standard.",
+      ],
+      en: [
+        "Writing code that runs inside the kernel rather than in user space.",
+        "Understanding the real-time limits of a standard Linux.",
+      ],
+    },
+    diagrams: [
+      {
+        lanes: [
+          { col: 0, label: t("Noyau Linux", "Linux kernel") },
+          { col: 1, label: t("Matériel", "Hardware") },
+        ],
+        cols: 2,
+        rows: 1,
+        nodes: [
+          { id: "mod", col: 0, row: 0, label: t("Module noyau", "Kernel module"), sub: t("C", "C"), tone: "focus" },
+          { id: "gpio", col: 1, row: 0, label: t("GPIO", "GPIO"), sub: t("Raspberry Pi", "Raspberry Pi") },
+        ],
+        edges: [{ from: "mod", to: "gpio" }],
+        caption: t("Le module pilote les GPIO depuis le noyau.", "The module drives the GPIOs from inside the kernel."),
+      },
+    ],
   },
   {
     slug: "robot-abb-irb120",
@@ -383,9 +484,21 @@ export const projects: Project[] = [
         "Validated the robot's motion in RobotStudio simulation.",
       ],
     },
+    challenges: {
+      fr: [
+        "Définir les repères de travail dont dépendent tous les points et trajectoires.",
+        "Valider les mouvements du robot en simulation.",
+      ],
+      en: [
+        "Defining the work frames every target and path depends on.",
+        "Validating the robot's motion in simulation.",
+      ],
+    },
     diagrams: [],
   },
 ];
+
+export const heroDiagram = projects[0].diagrams[0];
 
 export function getProject(slug: string) {
   return projects.find((p) => p.slug === slug);
