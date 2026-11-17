@@ -10,7 +10,6 @@ export const profile = {
   linkedin: "https://www.linkedin.com/in/mahmoud-kchouk-b07383226/",
   // Set to "https://github.com/mahmoudkchouk" once public repositories are online.
   github: null as string | null,
-  cv: "/cv/CV_Mahmoud_Kchouk.pdf",
   siteUrl: "https://mahmoudkchouk.github.io",
 };
 

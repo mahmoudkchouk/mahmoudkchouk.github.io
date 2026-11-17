@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { ArrowUpRight, Download, Mail } from "lucide-react";
-import { ui, asset, type Locale } from "@/lib/i18n";
+import { ArrowUpRight, Mail } from "lucide-react";
+import { ui, type Locale } from "@/lib/i18n";
 import { experience, capabilities, background, profile } from "@/content/site";
 import { projects, getProject, type Project } from "@/content/projects";
 import { SystemDiagram } from "./SystemDiagram";
@@ -338,10 +338,6 @@ export function ContactSection({ locale }: { locale: Locale }) {
               <Arrow className="text-fg-muted" />
             </a>
           )}
-          <a href={asset(profile.cv)} download className={secondary}>
-            <Download size={17} strokeWidth={1.75} aria-hidden />
-            {t.cv}
-          </a>
         </div>
       </div>
     </section>

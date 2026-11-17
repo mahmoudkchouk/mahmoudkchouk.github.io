@@ -13,8 +13,8 @@ export function generateStaticParams() {
 export const dynamicParams = false;
 
 const descriptions: Record<Locale, string> = {
-  fr: "Élève-ingénieur en automatique et informatique industrielle à l'UTT. Systèmes embarqués, IoT industriel, DevOps et cloud. Disponible pour un stage de fin d'études de 6 mois à partir de janvier 2027.",
-  en: "Engineering student in automation and industrial computing at UTT, France. Embedded systems, industrial IoT, DevOps and cloud. Available for a 6-month end-of-studies internship from January 2027.",
+  fr: "Élève-ingénieur en automatique et informatique industrielle à l'UTT. Systèmes embarqués, IoT industriel, DevOps et cloud. Disponible pour un stage de fin d'études de 6 mois à partir de janvier ou février 2027.",
+  en: "Engineering student in automation and industrial computing at UTT, France. Embedded systems, industrial IoT, DevOps and cloud. Available for a 6-month end-of-studies internship from January or February 2027.",
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
