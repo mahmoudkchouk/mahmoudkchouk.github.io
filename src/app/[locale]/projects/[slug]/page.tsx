@@ -149,7 +149,7 @@ export default async function CaseStudy({ params }: { params: Params }) {
                     <div className="plate rounded-[20px] p-5 sm:p-8">
                       <SystemDiagram diagram={d} locale={locale} id={`fig-${p.slug}-${i}`} stackBelow="lg" />
                     </div>
-                    <figcaption className="mt-3 text-[0.9375rem] text-fg-subtle">
+                    <figcaption className="mt-3 max-w-[70ch] text-[0.9375rem] text-fg-subtle">
                       <span className="text-fg-muted">
                         {t.figure} {(leadDiagram ? 2 : 1) + i}.
                       </span>{" "}
